@@ -1,6 +1,6 @@
 {
   "name": "work-la-7-head-react",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "",
   "scripts": {
     "serve": "webpack-dev-server --devtool eval --progress --colors --hot --content-base output"
