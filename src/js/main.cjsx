@@ -1,5 +1,4 @@
 'use strict'
-require 'animate.css'
 require '../css/app.scss'
 React = require 'react'
 getMuiTheme = require('material-ui/styles/getMuiTheme').default
