@@ -1,12 +1,17 @@
 'use strict'
 React = require 'react'
-{grey900} = require 'material-ui/styles/colors'
+{grey100} = require 'material-ui/styles/colors'
 randomColor = require 'randomcolor'
 
 class Slide extends React.Component
   @propTypes:
     id: React.PropTypes.string.isRequired
     children: React.PropTypes.node.isRequired
+
+  constructor: (props)->
+    super props
+    @state =
+      backgroundColor: randomColor {luminosity: 'dark'}
 
   styles:
     slide:
@@ -26,8 +31,8 @@ class Slide extends React.Component
       {},
       @styles.slide,
       {
-        color: grey900
-        backgroundColor: randomColor {luminosity: 'light'}
+        color: grey100
+        backgroundColor: @state.backgroundColor
       }
     )
 

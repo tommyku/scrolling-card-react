@@ -17,6 +17,7 @@ module.exports = {
   },
   module: {
     loaders: [
+      { test: /\.css$/, loader: "style-loader!css-loader?importLoaders=1!postcss-loader" },
       { test: /\.scss$/, loader: "style-loader!css-loader?importLoaders=1!sass-loader!postcss-loader" },
       { test: /\.coffee$/, loader: "coffee-loader" },
       { test: /\.cjsx$/, loaders: ['react-hot', 'coffee', 'cjsx']}

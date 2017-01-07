@@ -1,19 +1,24 @@
 'use strict'
+require 'animate.css'
 require '../css/app.scss'
 React = require 'react'
 getMuiTheme = require('material-ui/styles/getMuiTheme').default
 SwipeableViews = require('react-swipeable-views').default
-Slide = require './slide.cjsx'
+TaskSlide = require './task_slide.cjsx'
 NewSlide = require './new_slide.cjsx'
 store = require 'store'
-{AppBar, MuiThemeProvider, Snackbar} = require 'material-ui'
+{AppBar, MuiThemeProvider, Snackbar,
+ Drawer, MenuItem} = require 'material-ui'
 
 class Main extends React.Component
   constructor: (props)->
     super props
     @state =
-      tasks: store.get('work-la-7-head-react.tasks') || []
+      tasks: store.get('work-la-7-head-react.tasks') || ['1', '2', '3']
       toastOpen: false
+      contextMenu: false
+      activeSlideIndex: 0
+      toastText: ''
 
   addTask: (value)->
     tasks = @state.tasks
@@ -22,6 +27,35 @@ class Main extends React.Component
     @setState {
       toastOpen: true
       tasks: tasks
+      toastText: 'New task added'
+    }
+
+  removeTask: ()->
+    index = @state.activeSlideIndex
+    tasks = @state.tasks
+    tasks.splice index, 1
+    @storeTasks()
+    @setState {
+      toastOpen: true
+      contextMenu: false
+      tasks: tasks
+      activeSlideIndex: Math.max(index - 1, 0)
+      targetSlideIndex: Math.max(index - 1, 0)
+      toastText: 'New task removed'
+    }
+
+  promoteTask: ()->
+    index = @state.activeSlideIndex
+    tasks = @state.tasks
+    tasks.unshift(tasks.splice index, 1)
+    @storeTasks()
+    @setState {
+      toastOpen: true
+      contextMenu: false
+      tasks: tasks
+      activeSlideIndex: 0
+      targetSlideIndex: 0
+      toastText: 'New task promoted'
     }
 
   storeTasks: ->
@@ -30,22 +64,51 @@ class Main extends React.Component
   handleSnackbarClose: ->
     @setState {toastOpen: false}
 
+  handleSlideChange: (index)->
+    @setState {
+      activeSlideIndex: index
+    }
+
+  handleContextMenuChange: (open)->
+    @setState {
+      contextMenu: open
+    }
+
+  handleTransitionEnd: ->
+    @setState =>
+      {
+        targetSlideIndex: @state.activeSlideIndex
+      }
+
   render: ->
     <MuiThemeProvider muiTheme={getMuiTheme()}>
       <div>
-        <SwipeableViews>
+        <Drawer
+          docked={false}
+          width={200}
+          open={@state.contextMenu}
+          disableSwipeToOpen={true}
+          onRequestChange={@handleContextMenuChange.bind(@)}>
+          <MenuItem onTouchTap={@promoteTask.bind(@)}>Promote</MenuItem>
+          <MenuItem onTouchTap={@removeTask.bind(@)}>Remove</MenuItem>
+        </Drawer>
+        <SwipeableViews onChangeIndex={@handleSlideChange.bind(@)}
+          onTransitionEnd={@handleTransitionEnd.bind(@)}
+          index={@state.targetSlideIndex}>
           {
             for task, index in @state.tasks
-              <Slide key={index}
+              <TaskSlide key={index}
+                onContextMenuChange={@handleContextMenuChange.bind(@)}
+                position={index}
                 id={"#{index}"}>
                 {task}
-              </Slide>
+              </TaskSlide>
           }
           <NewSlide onSubmit={@addTask.bind(@)} />
         </SwipeableViews>
         <Snackbar
           open={@state.toastOpen}
-          message='New task added'
+          message={@state.toastText}
           autoHideDuration={1500}
           onRequestClose={@handleSnackbarClose.bind(@)} />
       </div>

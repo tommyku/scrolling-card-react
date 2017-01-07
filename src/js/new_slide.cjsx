@@ -2,7 +2,7 @@
 React = require 'react'
 Slide = require './slide.cjsx'
 Textarea = require('react-textarea-autosize').default
-{grey500} = require 'material-ui/styles/colors'
+{grey100} = require 'material-ui/styles/colors'
 
 class NewSlide extends React.Component
   @propTypes:
@@ -12,6 +12,7 @@ class NewSlide extends React.Component
     super props
     @state =
       inputId: "new-slide-input-#{(new Date).getTime()}"
+      placeholder: @placeholders[Math.floor(Math.random()*@placeholders.length)]
 
   styles:
     inputStyle:
@@ -19,6 +20,7 @@ class NewSlide extends React.Component
       background: 'none'
       border: 'none'
       fontSize: '10vmin'
+      color: grey100
 
   placeholders: [
     'today I wanna...'
@@ -27,9 +29,6 @@ class NewSlide extends React.Component
     'let\'s get this shit done'
     'deadline... :|'
   ]
-
-  randomPlaceholder: ->
-    @placeholders[Math.floor(Math.random()*@placeholders.length)]
 
   keydownHandler: (event)->
     if event.key == 'Enter' && event.target.value.length > 0
@@ -42,7 +41,7 @@ class NewSlide extends React.Component
       <Slide id='new'>
         <Textarea type='text'
           style={@styles.inputStyle}
-          placeholder={@randomPlaceholder()}
+          placeholder={@state.placeholder}
           id={@state.inputId}
           ref='textarea'
           onKeyDown={@keydownHandler.bind(@)}>
