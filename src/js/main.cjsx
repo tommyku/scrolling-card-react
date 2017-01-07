@@ -40,7 +40,7 @@ class Main extends React.Component
       tasks: tasks
       activeSlideIndex: Math.max(index - 1, 0)
       targetSlideIndex: Math.max(index - 1, 0)
-      toastText: 'New task removed'
+      toastText: 'Task removed'
     }
 
   promoteTask: ()->
@@ -54,7 +54,7 @@ class Main extends React.Component
       tasks: tasks
       activeSlideIndex: 0
       targetSlideIndex: 0
-      toastText: 'New task promoted'
+      toastText: 'Task promoted'
     }
 
   storeTasks: ->
