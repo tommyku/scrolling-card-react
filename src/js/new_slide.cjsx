@@ -20,7 +20,7 @@ class NewSlide extends React.Component
       background: 'none'
       border: 'none'
       fontSize: '10vmin'
-      color: grey100
+      color: 'currentColor'
 
   placeholders: [
     'today I wanna...'

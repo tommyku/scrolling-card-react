@@ -8,10 +8,14 @@ class Slide extends React.Component
     id: React.PropTypes.string.isRequired
     children: React.PropTypes.node.isRequired
 
+  HUES: ['red', 'orange', 'yellow', 'green', 'blue', 'purple']
+
   constructor: (props)->
     super props
+    hue = @HUES[Math.floor(Math.random()*@HUES.length)]
     @state =
-      backgroundColor: randomColor {luminosity: 'dark'}
+      backgroundColor: randomColor {luminosity: 'dark', hue: hue, alpha: 0.9}
+      color: randomColor {luminosity: 'light', hue: hue, alpha: 0.2}
 
   styles:
     slide:
@@ -31,7 +35,7 @@ class Slide extends React.Component
       {},
       @styles.slide,
       {
-        color: grey100
+        color: @state.color
         backgroundColor: @state.backgroundColor
       }
     )
